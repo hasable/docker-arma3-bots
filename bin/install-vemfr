@@ -1,0 +1,32 @@
+#!/bin/bash
+set -e
+
+. /usr/local/bin/common
+
+echo "Installing VEMFr"
+curl -Lj https://github.com/IT07/a3_vemf_reloaded/archive/master.zip -o vemfr.zip
+unzip vemfr.zip && rm vemfr.zip
+pushd  a3_vemf_reloaded-master
+
+makepbo -N -@=a3_vemf_reloaded a3_vemf_reloaded
+mkdir -p /opt/arma3/@VEMF/addons && mv a3_vemf_reloaded.pbo  /opt/arma3/@VEMF/addons
+
+# for testing purpoise...
+perl -i -p0e "s#(class\s+CfgVemfReloadedOverrides\s+\{.*)(};)#\1	    maxGlobalMissions = 1;\n\2#s" a3_vemf_reloaded_config/config.cpp
+mkdir -p /home/steamu/sources/@VEMF/addons && cp -R a3_vemf_reloaded_config /home/steamu/sources/@VEMF/addons
+
+vp=$(pwd)
+pushd /home/steamu/sources/mpmissions
+for mission in *;
+do
+	cp -R ${vp}/Missionname.MapName/VEMFr_client ${mission}/
+	echo -e "\n// VEMF" >> ${mission}/init.sqf
+	cat ${vp}/Missionname.MapName/init.sqf >> ${mission}/init.sqf
+	
+	perl -i -p0e "s#(class\s+RscTitles\s+\{.*[^\}])(};)#\1	    \#include \"VEMFr_client\\\\gui\\\\RscDisplayVEMFrClient.hpp\"\n\2#s" ${mission}/description.ext 	
+	perl -i -p0e "s#(class\s+RscTitles\s+\{.*[^\}])(};)#\1	    \#include \"VEMFr_client\\\\gui\\\\RscDisplayBaseAttack.hpp\"\n\2#s" ${mission}/description.ext 		
+done
+popd
+
+popd
+rm -rf DMS_Exile-master

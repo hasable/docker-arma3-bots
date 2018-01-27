@@ -1,0 +1,32 @@
+#!/bin/bash
+set -e
+
+. /usr/local/bin/common
+
+echo "Installing a3xai-upload"
+curl -Lj https://github.com/Fickdichhard/A3XAI-UPLOAD/archive/master.zip -o a3xai-upload.zip
+unzip a3xai-upload.zip && rm a3xai-upload.zip
+pushd  A3XAI-UPLOAD-master
+
+mkdir -p /opt/arma3/@A3XAI/addons && mv  1*Installation*Package/@A3XAI/addons/a3xai.pbo /opt/arma3/@A3XAI/addons/
+# Debug
+sed -i 's#\(\s*debugLevel\s*\)=\s*0\(\s*;\s*\)$#\1= 2\2#' 4*SQF/addons/a3xai_config/config.cpp
+sed -i 's#\(\s*verifyClassnames\s*\)=\s*1\(\s*;\s*\)$#\1= 0\2#' 4*SQF/addons/a3xai_config/config.cpp
+mkdir -p /home/steamu/sources/@A3XAI/addons && mv 4*SQF/addons/a3xai_config /home/steamu/sources/@A3XAI/addons/a3xai_config
+
+# Update mission
+aup=$(pwd)/2*Client*Addon
+pushd /home/steamu/sources/mpmissions
+for mission in *;
+do
+	cp -R ${aup}/A3XAI_Client ${mission}
+	echo "" >> ${mission}/init.sqf
+	echo "#include \"A3XAI_Client\A3XAI_initclient.sqf\";" >> ${mission}/init.sqf
+	
+	# Debug...
+	echo -e "\nclass CfgDeveloperOptions {\n    enableDebugMarkers=1;\n}\n" >> ${mission}/config.cpp
+done
+popd
+
+popd
+rm -rf A3XAI-UPLOAD-master

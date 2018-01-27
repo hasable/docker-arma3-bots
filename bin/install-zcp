@@ -1,0 +1,17 @@
+#!/bin/bash
+set -e
+
+. /usr/local/bin/common
+
+echo "Installing VEMFr"
+curl -Lj https://github.com/DevZupa/ZCP-A3-Exile/archive/V3.1.zip -o zcp.zip
+unzip zcp.zip && rm zcp.zip
+pushd ZCP-A3-Exile-3.1/server_addon_code
+mkdir -p /opt/arma3/@ZCP/addons 
+
+# Debug
+sed -i 's#^\(\s*ZCP_dev\s*=\s*\)false\(\s*;\s*\)#\1true\2#' a3_zcp_exile/fn_config.sqf
+
+mkdir -p /home/steamu/sources/@ZCP/addons && mv a3_zcp_exile /home/steamu/sources/@ZCP/addons
+popd 
+rm -rf ZCP-A3-Exile-3.1

@@ -1,0 +1,21 @@
+#!/bin/bash
+set -e
+
+. /usr/local/bin/common
+
+echo "Installing DMS"
+curl -Lj https://github.com/secondcoming/a3_exile_occupation/archive/development.zip -o occupation.zip
+unzip occupation.zip && rm occupation.zip
+pushd  a3_exile_occupation-development/source
+
+# Basic configuration
+# TODO
+
+# Debug
+sed -i 's#^\(\s*SC_debug\s*=\s*\)false\(\s*;\s*\)#\1true\2#' a3_exile_occupation/config.sqf
+
+makepbo -N a3_exile_occupation
+mkdir -p /opt/arma3/@Occupation/addons && mv a3_exile_occupation.pbo  /opt/arma3/@Occupation/addons
+popd
+
+rm -rf a3_exile_occupation-development

@@ -1,0 +1,27 @@
+#!/bin/bash
+set -e
+
+. /usr/local/bin/common
+
+echo "Installing DMS"
+curl -Lj https://github.com/Defent/DMS_Exile/archive/master.zip -o dms-exile.zip
+unzip dms-exile.zip && rm dms-exile.zip
+pushd  DMS_Exile-master/@ExileServer/addons
+
+# Basic configuration
+sed -i 's#^\(\s*\)//\(\s*\#define GIVE_AI_APEX_WEAPONS\)#\1\2#' a3_dms/config.sqf
+sed -i 's#^\(\s*\)//\(\s*\#define GIVE_AI_APEX_GEAR\)#\1\2#' a3_dms/config.sqf
+sed -i 's#^\(\s*\)//\(\s*\#define USE_APEX_WEAPONS_IN_CRATES\)#\1\2#' a3_dms/config.sqf
+sed -i 's#^\(\s*\)//\(\s*\#define USE_APEX_VEHICLES\)#\1\2#' a3_dms/config.sqf
+sed -i 's#^\(\s*DMS_Enable_RankChange\s*=\s*\)false\(\s*;\s*\)#\1true\2#' a3_dms/config.sqf
+sed -i 's#^\(\s*DMS_Add_AIKill2DB\s*=\s*\)false\(\s*;\s*\)#\1true\2#' a3_dms/config.sqf
+
+# Debug
+sed -i 's#\(\s*DMS_DEBUG\s*=\s*\)false\(\s*;\s*\)$#\1true\2#' a3_dms/fn_DMS_preInit.sqf
+
+
+makepbo -N a3_dms
+mkdir -p /opt/arma3/@DMS/addons && mv a3_dms.pbo  /opt/arma3/@DMS/addons
+popd
+
+rm -rf DMS_Exile-master

@@ -1,0 +1,15 @@
+#!/bin/bash
+set -e
+
+. /usr/local/bin/common
+
+echo "Installing a3xai-final"
+# get admintoolkit
+curl -Lj https://github.com/SnarkIndustries/A3XAI-Final/archive/master.zip -o a3xai-final.zip
+unzip a3xai-final.zip && rm a3xai-final.zip
+pushd  A3XAI-Final-master
+mv A3XAI a3xai && makepbo -N a3xai
+mkdir -p /opt/arma3/@A3XAI/addons && mv a3xai.pbo /opt/arma3/@A3XAI/addons/
+mkdir -p /home/steamu/sources/@A3XAI/addons && mv A3XAI_config /home/steamu/sources/@A3XAI/addons/a3xai_config
+popd
+rm -rf A3XAI-Final-master 
