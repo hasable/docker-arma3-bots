@@ -19,9 +19,7 @@ sed -i 's#^\(\s*DMS_Add_AIKill2DB\s*=\s*\)false\(\s*;\s*\)#\1true\2#' a3_dms/con
 # Debug
 sed -i 's#\(\s*DMS_DEBUG\s*=\s*\)false\(\s*;\s*\)$#\1true\2#' a3_dms/fn_DMS_preInit.sqf
 
-
-makepbo -N a3_dms
-mkdir -p /opt/arma3/@DMS/addons && mv a3_dms.pbo  /opt/arma3/@DMS/addons
+mkdir -p /opt/arma3/@DMS/addons && mkdir -p /home/steamu/sources/@DMS/addons && mv a3_dms /home/steamu/sources/@DMS/addons
 popd
 
 rm -rf DMS_Exile-master

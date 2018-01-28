@@ -4,7 +4,7 @@ LABEL maintainer='hasable'
 USER root
 # Provides commands & entrypoint
 COPY bin /usr/local/bin
-RUN chmod +x /usr/local/bin/*
+RUN chmod +x /usr/local/bin/* && sync
 
 # Server user
 ARG USER_NAME=steamu

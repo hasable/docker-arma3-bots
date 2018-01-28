@@ -6,12 +6,24 @@ set -e
 echo "Installing VEMFr"
 curl -Lj https://github.com/DevZupa/ZCP-A3-Exile/archive/V3.1.zip -o zcp.zip
 unzip zcp.zip && rm zcp.zip
-pushd ZCP-A3-Exile-3.1/server_addon_code
-mkdir -p /opt/arma3/@ZCP/addons 
+pushd ZCP-A3-Exile-3.1
 
 # Debug
-sed -i 's#^\(\s*ZCP_dev\s*=\s*\)false\(\s*;\s*\)#\1true\2#' a3_zcp_exile/fn_config.sqf
+sed -i 's#^\(\s*ZCP_dev\s*=\s*\)false\(\s*;\s*\)#\1true\2#' server_addon_code/a3_zcp_exile/fn_config.sqf
 
-mkdir -p /home/steamu/sources/@ZCP/addons && mv a3_zcp_exile /home/steamu/sources/@ZCP/addons
+mkdir -p /opt/arma3/@ZCP/addons 
+mkdir -p /home/steamu/sources/@ZCP/addons 
+mv server_addon_code/a3_zcp_exile /home/steamu/sources/@ZCP/addons
+
+zcp=$(pwd)/mission_code
+
+pushd /home/steamu/sources/mpmissions
+for mission in *;
+do
+	cp ${zcp}/zcp.sqf ${mission}
+	echo -e "call compile preprocessfilelinenumbers \"zcp.sqf\";\n" > ${mission}/initPlayerLocal.sqf
+done
+popd
+
 popd 
 rm -rf ZCP-A3-Exile-3.1

@@ -14,8 +14,9 @@ pushd  a3_exile_occupation-development/source
 # Debug
 sed -i 's#^\(\s*SC_debug\s*=\s*\)false\(\s*;\s*\)#\1true\2#' a3_exile_occupation/config.sqf
 
-makepbo -N a3_exile_occupation
-mkdir -p /opt/arma3/@Occupation/addons && mv a3_exile_occupation.pbo  /opt/arma3/@Occupation/addons
+mkdir -p /opt/arma3/@Occupation/addons 
+mkdir -p /home/steamu/sources/@Occupation/addons
+mv a3_exile_occupation  /home/steamu/sources/@Occupation/addons
 popd
 
 rm -rf a3_exile_occupation-development
