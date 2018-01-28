@@ -29,4 +29,4 @@ done
 popd
 
 popd
-rm -rf DMS_Exile-master
+rm -rf a3_vemf_reloaded-master*
