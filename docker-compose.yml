@@ -2,9 +2,9 @@ version: '2'
 services:
   arma-3-bots:
     image: "hasable/arma3-bots"
-    container_name: "arma-3-bots"
+    container_name: "arma-3-bots-master"
     depends_on: 
-        - arma-3-exile-database
+      - arma-3-exile-database
     ports:
       - "2302:2302/udp" 
       - "2303:2303/udp" 
@@ -19,10 +19,47 @@ services:
       - EXILE_DATABASE_USER=altisu
       - EXILE_DATABASE_PASS=altispw
       - ATK_CONFIG_ADMIN_LIST=76561197990024201,76561198007339024
+      - HC_LIST=hc0,hc1
     volumes:
       - /mnt/shares/logs:/opt/arma3/@ExileServer/extDB/logs/
+    networks:
+      main:
+        aliases:
+          - arma-3-bots-master
+          - master
+
+  arma-3-bots-hc0:
+    image: "hasable/arma3-bots"
+    container_name: "arma-3-bots-hc0"
+    environment:
+      - HC_SERVER=master
+    entrypoint: 
+      - /usr/local/bin/docker-entrypoint-hc
+    command: -mod=@Exile;@A3XAI_HC;@CBA_A3;@CUPWeapons;@CUPUnits;@CUPVehicles;@R3FArmes;@R3FUnites -name=HC0
     links:
-        - "arma-3-exile-database:database"
+      - "arma-3-bots:master"
+    networks:
+      main:
+        aliases:
+          - arma-3-bots-hc0
+          - hc0  
+
+  arma-3-bots-hc1:
+    image: "hasable/arma3-bots"
+    container_name: "arma-3-bots-hc1"
+    environment:
+      - HC_SERVER=master
+    entrypoint: 
+      - /usr/local/bin/docker-entrypoint-hc
+    command: -mod=@Exile;@A3XAI_HC;@CBA_A3;@CUPWeapons;@CUPUnits;@CUPVehicles;@R3FArmes;@R3FUnites
+    links:
+      - "arma-3-bots:master"
+    networks:
+      main:
+        aliases:
+          - arma-3-bots-hc1
+          - hc1
+  
   arma-3-exile-database:
     image: "mysql/mysql-server:5.7.19-1.1.1"
     container_name: "arma-3-exile-database"
@@ -30,6 +67,14 @@ services:
       - database-content:/var/lib/mysql
       - /mnt/shares/mysql/logs:/var/log
     command: "--sql-mode=ONLY_FULL_GROUP_BY,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"
+    networks:
+      main:
+        aliases:
+          - database
+
+networks:
+    main:
+
 volumes:
     database-content:
         external:

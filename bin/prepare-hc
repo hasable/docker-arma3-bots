@@ -1,0 +1,192 @@
+#!/bin/bash
+set -e
+
+. /usr/local/bin/common
+
+echo "Preparing to use headless client"
+
+set +e
+read -r -d '' RESERVED_SLOTS << 'EOF'
+				class Item100
+				{
+					position[]={13239.08,16.010651,11685.795};
+					special="NONE";
+					id=100;
+					side="LOGIC";
+					vehicle="HeadlessClient_F";
+					player="HC0";
+					skill=0.60000002;
+					forceHeadlessClient = 1;
+				};
+				class Item101
+				{
+					position[]={13239.08,16.010651,11685.795};
+					special="NONE";
+					id=101;
+					side="LOGIC";
+					vehicle="HeadlessClient_F";
+					player="HC1";
+					skill=0.60000002;
+					forceHeadlessClient = 1;
+				};
+				class Item102
+				{
+					position[]={13239.08,16.010651,11685.795};
+					special="NONE";
+					id=102;
+					side="LOGIC";
+					vehicle="HeadlessClient_F";
+					player="HC2";
+					skill=0.60000002;
+					forceHeadlessClient = 1;
+				};
+				class Item103
+				{
+					position[]={13239.08,16.010651,11685.795};
+					special="NONE";
+					id=103;
+					side="LOGIC";
+					vehicle="HeadlessClient_F";
+					player="HC3";
+					skill=0.60000002;
+					forceHeadlessClient = 1;
+				};
+				class Item104
+				{
+					position[]={13239.08,16.010651,11685.795};
+					special="NONE";
+					id=104;
+					side="LOGIC";
+					vehicle="HeadlessClient_F";
+					player="HC4";
+					skill=0.60000002;
+					forceHeadlessClient = 1;
+				};
+				class Item105
+				{
+					position[]={13239.08,16.010651,11685.795};
+					special="NONE";
+					id=105;
+					side="LOGIC";
+					vehicle="HeadlessClient_F";
+					player="HC5";
+					skill=0.60000002;
+					forceHeadlessClient = 1;
+				};
+				class Item106
+				{
+					position[]={13239.08,16.010651,11685.795};
+					special="NONE";
+					id=106;
+					side="LOGIC";
+					vehicle="HeadlessClient_F";
+					player="HC6";
+					skill=0.60000002;
+					forceHeadlessClient = 1;
+				};
+				class Item107
+				{
+					position[]={13239.08,16.010651,11685.795};
+					special="NONE";
+					id=107;
+					side="LOGIC";
+					vehicle="HeadlessClient_F";
+					player="HC7";
+					skill=0.60000002;
+					forceHeadlessClient = 1;
+				};
+				class Item108
+				{
+					position[]={13239.08,16.010651,11685.795};
+					special="NONE";
+					id=108;
+					side="LOGIC";
+					vehicle="HeadlessClient_F";
+					player="HC8";
+					skill=0.60000002;
+					forceHeadlessClient = 1;
+				};
+				class Item109
+				{
+					position[]={13239.08,16.010651,11685.795};
+					special="NONE";
+					id=109;
+					side="LOGIC";
+					vehicle="HeadlessClient_F";
+					player="HC9";
+					skill=0.60000002;
+					forceHeadlessClient = 1;
+				};
+EOF
+set -e
+
+RESERVED_SLOTS=
+set +e
+read -r -d '' RESERVED_SLOTS << 'EOF'
+		class Item1
+		{
+			side="LOGIC";
+			class Vehicles
+			{
+				items=4;
+				class Item0
+				{
+					position[]={10720.502,12.714643,11356.243};
+					special="NONE";
+					id=100;
+					side="LOGIC";
+					vehicle="HeadlessClient_F";
+					player="PLAY CDG";
+					skill=0.60000002;
+					text="HC0";
+					forceHeadlessClient = 1;
+				};
+				class Item1
+				{
+					position[]={10720.502,12.714643,11356.243};
+					special="NONE";
+					id=101;
+					side="LOGIC";
+					vehicle="HeadlessClient_F";
+					player="PLAY CDG";
+					skill=0.60000002;
+					text="HC1";
+					forceHeadlessClient = 1;
+				};
+				class Item2
+				{
+					position[]={10720.502,12.714643,11356.243};
+					special="NONE";
+					id=102;
+					side="LOGIC";
+					vehicle="HeadlessClient_F";
+					player="PLAY CDG";
+					skill=0.60000002;
+					text="HC2";
+					forceHeadlessClient = 1;
+				};
+				class Item3
+				{
+					position[]={10720.502,12.714643,11356.243};
+					special="NONE";
+					id=103;
+					side="LOGIC";
+					vehicle="HeadlessClient_F";
+					player="PLAY CDG";
+					skill=0.60000002;
+					text="HC3";
+					forceHeadlessClient = 1;
+				};
+			};
+		};
+EOF
+set -e
+
+pushd /home/steamu/sources/mpmissions
+for mission in *;
+do
+	#sed -i 's#\(\s*items\s*\)=\s*100\(\s*;\s*\)$#\1= 110\2#'  ${mission}/mission.sqm
+	#perl -i -p0e "s#(class\s+Vehicles\s*\{.*?(\s*class\sItem.*?\S+\s*\{.*?\}\s*;){100})(\s*\}\s*;)#\1\n				${RESERVED_SLOTS}\3#s" ${mission}/mission.sqm
+	perl -i -p0e "s#(class\sGroups\s*\{.*?)items=1(;\s*class\sItem0\s*\{.*?class\s+Vehicles\s*\{.*?(\s*class\sItem.*?\S+\s*\{.*?\}\s*;){100}\s*\}\s*;\s*\}\s*;)(\s*\}\s*;)#\1items=2\2\n		${RESERVED_SLOTS}\4#s" ${mission}/mission.sqm
+done
+popd 

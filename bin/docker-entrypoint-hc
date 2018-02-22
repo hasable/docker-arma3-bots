@@ -1,0 +1,31 @@
+#!/bin/bash
+set -ex
+
+# configure a3xai
+pushd /home/steamu/sources/@A3XAI/addons
+makepbo -N a3xai_config
+#cp a3xai_config/config.cpp /opt/arma3/@ExileServer/a3xai_config.sqf
+#mv -f a3xai_config.pbo /opt/arma3/@A3XAIHC/addons/
+#chmod 755 /opt/arma3/@A3XAIHC/addons/*			
+popd
+
+# Update missions ...
+# Mise à jour du timer dans la status bar Exad
+pushd /home/steamu/sources/mpmissions
+if [ -d ${EXILE_CONFIG_MISSION}/ExAdClient ]; then
+	sed -i "s#^\(\s*ExAd_SB_Timer\s*=\).*\(;.*$\)#\1 ${remain}\2#"  ${EXILE_CONFIG_MISSION}/ExAdClient/StatsBar/customize.sqf
+fi
+makepbo -N ${EXILE_CONFIG_MISSION} && mv -f ${EXILE_CONFIG_MISSION}.pbo /opt/arma3/mpmissions/
+popd
+
+# configure headless client
+IP=
+if [ ! -z "${HC_SERVER}" ]; then
+	IP=$(getent hosts ${HC_SERVER} | cut -f1 -d" ")
+fi
+
+echo "$@"
+exec /opt/arma3/arma3server -client -connect=${IP} "$@"
+
+
+

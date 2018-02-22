@@ -1,0 +1,120 @@
+#!/bin/bash
+set -e
+
+##########################################################################################
+# Server config
+##########################################################################################
+confd -onetime -backend env
+
+##########################################################################################
+# Update AdminToolKit configuration...
+##########################################################################################
+
+# Add admins
+if [ ! -z "${ATK_CONFIG_ADMIN_LIST}" ]; then 
+	BUILD_ATK_CFG="true"
+	echo "Admins : ${ATK_CONFIG_ADMIN_LIST}"
+	sed -i "s#^\(.*AdminList.*{\).*\(}\)#\1 \"${ATK_CONFIG_ADMIN_LIST//,/\", \"}\" \2#"  /home/steamu/sources/\@AdminToolkitServer/addons/admintoolkit_servercfg/config.cpp
+fi
+
+# Add moderators
+if [ ! -z "${ATK_CONFIG_MODERATOR_LIST}" ]; then 
+	BUILD_ATK_CFG="true"
+	echo "Moderators : ${ATK_CONFIG_MODERATOR_LIST}"
+	sed -i "s#^\(.*ModeratorList.*{\).*\(}\)#\1 \"${ATK_CONFIG_MODERATOR_LIST//,/\", \"}\" \2#"  /home/steamu/sources/\@AdminToolkitServer/addons/admintoolkit_servercfg/config.cpp
+fi
+
+echo "Rebuilding Exile server configuration..."
+
+##########################################################################################
+# Reboot configuration...
+##########################################################################################
+
+# calcul du decalage UTC
+UTC=$(( ${DECALAGE} + $(date -d @0 +%-H) * 3600 + $(date -d @0 +%-M) * 60 ))
+
+# calcul debut de la session de jeu
+startp=$(( ( ( $(date +%s ) + ${EXILE_CONFIG_RESTART_START} + ${UTC} ) / ${EXILE_CONFIG_RESTART_CYCLE})*${EXILE_CONFIG_RESTART_CYCLE} - ${EXILE_CONFIG_RESTART_START} - ${UTC} ))
+echo "Started at $(date -d @$startp +%H:%M )"
+# et calcul de fin
+endp=$(( ${startp} + ${EXILE_CONFIG_RESTART_CYCLE} ))
+echo "Should end at $(date -d @$endp +%H:%M )"
+current=$(date +%s )
+
+remain=$(( ${endp} - ${current} ))
+if [ "${remain}" -lt "${EXILE_CONFIG_RESTART_GRACE_TIME}" ]; then
+        remain=$(( ${remain} + ${EXILE_CONFIG_RESTART_CYCLE} ))
+fi
+echo "Remaining time $(date -u -d @$remain '+%H:%M')"
+
+sed -i "s#^\(\s*restartTimer\[\] \s*=\s\).*\(;\s*$\)#\1$(date -u -d @$remain '+{%-H, %-M}')\2#"  /home/steamu/sources/\@ExileServer/addons/exile_server_config/config.cpp
+
+if [ ! -z "${EXILE_CONFIG_PASSWORD_COMMAND}" ]; then 
+	sed -i "s#^\(\s*serverPassword\s*=\s*\"\).*\(\".*$\)#\1${EXILE_CONFIG_PASSWORD_COMMAND}\2#"  /home/steamu/sources/\@ExileServer/addons/exile_server_config/config.cpp
+fi
+
+##########################################################################################
+# Configuration update
+##########################################################################################
+
+#Update mods
+pushd /home/steamu/sources/	
+for mod in @*; do
+	echo "Rebuilding ${mod}..."
+	pushd ${mod}/addons/
+	for dir in *; do
+		if [ -d ${dir} ]; then 
+			makepbo -N ${dir}
+			mv -f ${dir}.pbo /opt/arma3/${mod}/addons/${dir}.pbo
+			chmod 755 /opt/arma3/${mod}/addons/${dir}.pbo
+			echo " - added /opt/arma3/${mod}/addons/${dir}.pbo"
+		fi			
+	done
+	popd
+done
+popd
+
+# Update missions ...
+# Mise à jour du timer dans la status bar Exad
+pushd /home/steamu/sources/mpmissions
+if [ -d ${EXILE_CONFIG_MISSION}/ExAdClient ]; then
+	sed -i "s#^\(\s*ExAd_SB_Timer\s*=\).*\(;.*$\)#\1 ${remain}\2#"  ${EXILE_CONFIG_MISSION}/ExAdClient/StatsBar/customize.sqf
+fi
+makepbo -N ${EXILE_CONFIG_MISSION} && mv -f ${EXILE_CONFIG_MISSION}.pbo /opt/arma3/mpmissions/
+popd
+
+##########################################################################################
+# Headless client
+##########################################################################################
+
+if [  ! -z "${HC_LIST}" ]; then
+
+	IP_LIST=""
+	IP_SEP=""
+	IP=
+	
+	for client in $(echo ${HC_LIST} | sed "s/,/ /g");
+	do
+		IP=
+		TIME=0
+		
+		# wait for HC to be ready
+		until [ ! -z "${IP}" ] || [ "${TIME}" -ge 60 ]; do
+			IP=$(getent ahosts ${client} | head -1 | cut -d" " -f1)
+			TIME=$((${TIME}+1))
+			sleep 1
+		done
+		
+		if [ ! -z "${IP}" ]; then
+			IP_LIST="${IP_LIST}${IP_SEP}\"${IP}\""
+			IP_SEP=", "
+		fi	
+		
+	done
+
+	echo "localClient[]={${IP_LIST}};" >> /opt/arma3/conf/exile.cfg
+	echo "headlessClients[]={${IP_LIST}};" >> /opt/arma3/conf/exile.cfg
+	echo "battleyeLicense=1;" >> /opt/arma3/conf/exile.cfg
+fi
+
+exec "$@"

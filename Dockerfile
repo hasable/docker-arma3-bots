@@ -10,12 +10,13 @@ RUN chmod +x /usr/local/bin/* && sync
 ARG USER_NAME=steamu
 USER ${USER_NAME}
 WORKDIR /tmp
-RUN install-a3xai-upload \
- && install-dms \
- && install-occupation \
- && install-vemfr \
- && install-zcp
-
+RUN prepare-hc \ 
+	&& install-a3xai-upload \
+	&& install-dms \
+	&& install-occupation \
+	&& install-vemfr \
+	&& install-zcp
+	
 WORKDIR /opt/arma3
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint", "/opt/arma3/arma3server"]
 CMD ["\"-config=conf/exile.cfg\"", \
@@ -23,3 +24,4 @@ CMD ["\"-config=conf/exile.cfg\"", \
 		"\"-mod=@Exile;@CBA_A3;@CUPWeapons;@CUPUnits;@CUPVehicles;@R3FArmes;@R3FUnites\"", \
 		"-world=empty", \
 		"-autoinit"]
+

@@ -8,11 +8,19 @@ curl -Lj https://github.com/Fickdichhard/A3XAI-UPLOAD/archive/master.zip -o a3xa
 unzip a3xai-upload.zip && rm a3xai-upload.zip
 pushd  A3XAI-UPLOAD-master
 
+# basic install
 mkdir -p /opt/arma3/@A3XAI/addons && mv  1*Installation*Package/@A3XAI/addons/a3xai.pbo /opt/arma3/@A3XAI/addons/
-# Debug
+
+# Headless client part
+mkdir -p /opt/arma3/@A3XAI_HC/addons && mv 6*Headless*Client/@A3XAI_HC/addons/a3xai.pbo /opt/arma3/@A3XAI_HC/addons/
+mv 6*Headless*Client/@A3XAI_HC/Keys/a3xai.bikey /opt/arma3/keys/
+sed -i 's#\(\s*enableHC\s*\)=\s*0\(\s*;\s*\)$#\1= 1\2#' 4*SQF/addons/a3xai_config/config.cpp
+#sed -i 's#\(\s*waitForHC\s*\)=\s*0\(\s*;\s*\)$#\1= 1\2#' 4*SQF/addons/a3xai_config/config.cpp
+
+# Enable debug
 sed -i 's#\(\s*debugLevel\s*\)=\s*0\(\s*;\s*\)$#\1= 2\2#' 4*SQF/addons/a3xai_config/config.cpp
 sed -i 's#\(\s*verifyClassnames\s*\)=\s*1\(\s*;\s*\)$#\1= 0\2#' 4*SQF/addons/a3xai_config/config.cpp
-mkdir -p /home/steamu/sources/@A3XAI/addons && mv 4*SQF/addons/a3xai_config /home/steamu/sources/@A3XAI/addons/a3xai_config
+mkdir -p /home/steamu/sources/@A3XAI/addons && mv 4*SQF/addons/a3xai_config /home/steamu/sources/@A3XAI/addons
 
 # Update mission
 aup=$(pwd)/2*Client*Addon
@@ -24,7 +32,7 @@ do
 	echo "#include \"A3XAI_Client\A3XAI_initclient.sqf\";" >> ${mission}/init.sqf
 	
 	# Debug...
-	echo -e "\nclass CfgDeveloperOptions {\n    enableDebugMarkers=1;\n}\n" >> ${mission}/config.cpp
+	echo -e "\nclass CfgDeveloperOptions {\n    enableDebugMarkers=1;\nuseDebugLevel=2;\n}\n" >> ${mission}/config.cpp
 done
 popd
 
