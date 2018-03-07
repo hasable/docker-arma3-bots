@@ -98,7 +98,7 @@ if [  ! -z "${HC_LIST}" ]; then
 		IP=
 		TIME=0
 		
-		# wait for HC to be ready
+		# wait for HC to start
 		until [ ! -z "${IP}" ] || [ "${TIME}" -ge 60 ]; do
 			IP=$(getent ahosts ${client} | head -1 | cut -d" " -f1)
 			TIME=$((${TIME}+1))

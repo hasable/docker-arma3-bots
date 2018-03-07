@@ -1,6 +1,9 @@
 #!/bin/bash
 set -ex
 
+# Wait for server to start
+sleep 180
+
 # configure a3xai
 pushd /home/steamu/sources/@A3XAI/addons
 makepbo -N a3xai_config
