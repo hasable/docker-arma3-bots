@@ -21,7 +21,7 @@ services:
       - ATK_CONFIG_ADMIN_LIST=76561197990024201,76561198007339024
       - HC_LIST=hc0,hc1
     volumes:
-      - /mnt/shares/logs:/opt/arma3/@ExileServer/extDB/logs/
+      - D:/Shares:/tmp/shares  
     networks:
       main:
         aliases:
@@ -35,7 +35,7 @@ services:
       - HC_SERVER=master
     entrypoint: 
       - /usr/local/bin/docker-entrypoint-hc
-    command: -mod=@Exile;@A3XAI_HC;@CBA_A3;@CUPWeapons;@CUPUnits;@CUPVehicles;@R3FArmes;@R3FUnites -name=HC0
+    command: -mod=@Exile;@EBM;@A3XAI_HC;@CBA_A3;@CUPWeapons;@CUPUnits;@CUPVehicles;@R3FArmes;@R3FUnites -name=HC0
     links:
       - "arma-3-bots:master"
     networks:
@@ -51,7 +51,7 @@ services:
       - HC_SERVER=master
     entrypoint: 
       - /usr/local/bin/docker-entrypoint-hc
-    command: -mod=@Exile;@A3XAI_HC;@CBA_A3;@CUPWeapons;@CUPUnits;@CUPVehicles;@R3FArmes;@R3FUnites
+    command: -mod=@Exile;@EBM;@A3XAI_HC;@CBA_A3;@CUPWeapons;@CUPUnits;@CUPVehicles;@R3FArmes;@R3FUnites
     links:
       - "arma-3-bots:master"
     networks:
@@ -65,7 +65,6 @@ services:
     container_name: "arma-3-exile-database"
     volumes:
       - database-content:/var/lib/mysql
-      - /mnt/shares/mysql/logs:/var/log
     command: "--sql-mode=ONLY_FULL_GROUP_BY,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"
     networks:
       main:
@@ -78,4 +77,4 @@ networks:
 volumes:
     database-content:
         external:
-            name: database
+            name: exile-database-content
