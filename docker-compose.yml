@@ -21,7 +21,16 @@ services:
       - ATK_CONFIG_ADMIN_LIST=76561197990024201,76561198007339024
       - HC_LIST=hc0,hc1
     volumes:
-      - D:/Shares:/tmp/shares  
+      - D:/mods/@CUP_UNITS-1.10.1:/opt/arma3/@CUPUnits
+      - D:/mods/@CUP_UNITS-1.10.1/keys/cup_units-1.10.1.bikey:/opt/arma3/keys/cup_units-1.10.1.bikey
+      - D:/mods/@CUP_VEHICLES-1.10.1:/opt/arma3/@CUPVehicles
+      - D:/mods/@CUP_VEHICLES-1.10.1/keys/cup_vehicles-1.10.1.bikey:/opt/arma3/keys/cup_vehicles-1.10.1.bikey
+      - D:/mods/@CUP_WEAPONS-1.10.1:/opt/arma3/@CUPWeapons
+      - D:/mods/@CUP_WEAPONS-1.10.1/keys/cup_weapons-1.10.1.bikey:/opt/arma3/keys/cup_weapons-1.10.1.bikey
+      - D:/mods/@R3F_ARMES-3.5.1:/opt/arma3/@R3FArmes
+      - D:/mods/@R3F_ARMES-3.5.1/server_key/r3f.bikey:/opt/arma3/keys/r3fa.bikey
+      - D:/mods/@R3F_UNITES-3.7.2:/opt/arma3/@R3FUnites
+      - D:/mods/@R3F_UNITES-3.7.2/server_key/r3f.bikey:/opt/arma3/keys/r3fu.bikey
     networks:
       main:
         aliases:
@@ -36,6 +45,17 @@ services:
     entrypoint: 
       - /usr/local/bin/docker-entrypoint-hc
     command: -mod=@Exile;@EBM;@A3XAI_HC;@CBA_A3;@CUPWeapons;@CUPUnits;@CUPVehicles;@R3FArmes;@R3FUnites -name=HC0
+    volumes:
+      - D:/mods/@CUP_UNITS-1.10.1:/opt/arma3/@CUPUnits
+      - D:/mods/@CUP_UNITS-1.10.1/keys/cup_units-1.10.1.bikey:/opt/arma3/keys/cup_units-1.10.1.bikey
+      - D:/mods/@CUP_VEHICLES-1.10.1:/opt/arma3/@CUPVehicles
+      - D:/mods/@CUP_VEHICLES-1.10.1/keys/cup_vehicles-1.10.1.bikey:/opt/arma3/keys/cup_vehicles-1.10.1.bikey
+      - D:/mods/@CUP_WEAPONS-1.10.1:/opt/arma3/@CUPWeapons
+      - D:/mods/@CUP_WEAPONS-1.10.1/keys/cup_weapons-1.10.1.bikey:/opt/arma3/keys/cup_weapons-1.10.1.bikey
+      - D:/mods/@R3F_ARMES-3.5.1:/opt/arma3/@R3FArmes
+      - D:/mods/@R3F_ARMES-3.5.1/server_key/r3f.bikey:/opt/arma3/keys/r3fa.bikey
+      - D:/mods/@R3F_UNITES-3.7.2:/opt/arma3/@R3FUnites
+      - D:/mods/@R3F_UNITES-3.7.2/server_key/r3f.bikey:/opt/arma3/keys/r3fu.bikey
     links:
       - "arma-3-bots:master"
     networks:
@@ -52,6 +72,17 @@ services:
     entrypoint: 
       - /usr/local/bin/docker-entrypoint-hc
     command: -mod=@Exile;@EBM;@A3XAI_HC;@CBA_A3;@CUPWeapons;@CUPUnits;@CUPVehicles;@R3FArmes;@R3FUnites
+    volumes:
+      - D:/mods/@CUP_UNITS-1.10.1:/opt/arma3/@CUPUnits
+      - D:/mods/@CUP_UNITS-1.10.1/keys/cup_units-1.10.1.bikey:/opt/arma3/keys/cup_units-1.10.1.bikey
+      - D:/mods/@CUP_VEHICLES-1.10.1:/opt/arma3/@CUPVehicles
+      - D:/mods/@CUP_VEHICLES-1.10.1/keys/cup_vehicles-1.10.1.bikey:/opt/arma3/keys/cup_vehicles-1.10.1.bikey
+      - D:/mods/@CUP_WEAPONS-1.10.1:/opt/arma3/@CUPWeapons
+      - D:/mods/@CUP_WEAPONS-1.10.1/keys/cup_weapons-1.10.1.bikey:/opt/arma3/keys/cup_weapons-1.10.1.bikey
+      - D:/mods/@R3F_ARMES-3.5.1:/opt/arma3/@R3FArmes
+      - D:/mods/@R3F_ARMES-3.5.1/server_key/r3f.bikey:/opt/arma3/keys/r3fa.bikey
+      - D:/mods/@R3F_UNITES-3.7.2:/opt/arma3/@R3FUnites
+      - D:/mods/@R3F_UNITES-3.7.2/server_key/r3f.bikey:/opt/arma3/keys/r3fu.bikey
     links:
       - "arma-3-bots:master"
     networks:
