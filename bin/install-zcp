@@ -4,7 +4,8 @@ set -e
 . /usr/local/bin/common
 
 echo "Installing VEMFr"
-curl -Lj https://github.com/DevZupa/ZCP-A3-Exile/archive/V3.1.zip -o zcp.zip
+curl -Lj https://github.com/DevZupa/ZCP-A3-Exile/archive/master.zip -o zcp.zip
+
 unzip zcp.zip && rm zcp.zip
 pushd ZCP-A3-Exile-3.1
 

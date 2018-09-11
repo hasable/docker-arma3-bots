@@ -13,9 +13,6 @@ mkdir -p /opt/arma3/@VEMF/addons && mv a3_vemf_reloaded.pbo  /opt/arma3/@VEMF/ad
 
 # for testing purpoise...
 perl -i -p0e "s#(class\s+CfgVemfReloadedOverrides\s+\{.*)(};)#\1    maxGlobalMissions = 1;\n    headlessClientSupport = yes;\n	headlessClientNames[] = { \"HC0\" };\n\2#s" a3_vemf_reloaded_config/config.cpp
-
-
-
 mkdir -p /home/steamu/sources/@VEMF/addons && cp -R a3_vemf_reloaded_config /home/steamu/sources/@VEMF/addons
 
 vp=$(pwd)
